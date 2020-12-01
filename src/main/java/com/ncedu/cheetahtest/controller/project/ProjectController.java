@@ -55,6 +55,7 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getAllArchievedProjects());
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<ProjectResponse> updateProject(@PathVariable int id,
                                                          @RequestBody Project project) {
