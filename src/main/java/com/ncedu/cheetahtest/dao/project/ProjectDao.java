@@ -31,6 +31,4 @@ public interface ProjectDao {
 
     List<Project> findActiveByTitlePaginated(int page, int size, String title);
 
-    public void updateProjectById(int id, Project project);
-
 }

@@ -22,7 +22,7 @@ public class ParametersController {
     public Parameter createParameter(@RequestBody Parameter parameter) {
         return parameterService.createParameter(parameter);
     }
-    @GetMapping("/{idDataSet}")
+    @GetMapping
     public PaginationParameter findParameterByType(@PathVariable int idDataSet,
                                                    @RequestParam("type") String type,
                                                    @RequestParam("size") int size,

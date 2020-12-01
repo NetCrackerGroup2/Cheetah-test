@@ -21,9 +21,9 @@ public class Consts {
         StringBuilder select = new StringBuilder();
 
         for(int i = 0; i < rows.length; i++) {
-            if (rows[i].equalsIgnoreCase("title")) {
+            if (rows[i].toLowerCase().equals("title")) {
                 findBy = "title";
-            } else if (rows[i].equalsIgnoreCase("name")){
+            } else if (rows[i].toLowerCase().equals("name")){
                 findBy = "name";
             }
 
@@ -79,7 +79,7 @@ public class Consts {
     public String getActiveSearched() {
         return String.format(
                 SELECT_ROWS +
-                FROM_TABLE +
+                FROM_TABLE+
                 WHERE_STATUS_ACTIVE +
                 " AND " + findBy + " LIKE ? " +
                 ORDER_PAGINATED,

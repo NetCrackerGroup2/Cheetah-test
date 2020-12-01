@@ -17,7 +17,4 @@ public interface ProjectService {
     ResponseProjectPaginated getActiveProjects(int page, int size);
 
     ResponseProjectPaginated getActiveProjectsByTitle(int page, int size, String title);
-
-    void updateProjectById(int id, Project projectDto);
-
 }
