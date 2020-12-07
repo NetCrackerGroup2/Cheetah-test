@@ -5,6 +5,7 @@ import com.ncedu.cheetahtest.entity.action.Action;
 import com.ncedu.cheetahtest.entity.action.PaginationAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -62,5 +63,17 @@ public class ActionServiceImpl implements ActionService {
             paginationAction.setList(actionDao.getActionsByType(type, size, size * (page - 1)));
         }
         return paginationAction;
+    }
+
+    @Override
+    @Transactional
+    public Action getActionById(int id) {
+        return actionDao.getActionById(id);
+    }
+
+    @Override
+    @Transactional
+    public List<Action> getActionsInCompoundNotPaginated(int idCompound) {
+        return actionDao.getActionsInCompoundNotPaginated(idCompound);
     }
 }

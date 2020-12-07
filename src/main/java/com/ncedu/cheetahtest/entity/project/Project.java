@@ -7,14 +7,14 @@ import java.sql.Timestamp;
 @Data
 public class Project {
     private int id;
-    private String name;
+    private String title;
     private String link;
     private String status;
     private Timestamp createDate;
 
-    public Project(int id, String name, String link, String status, Timestamp createDate) {
+    public Project(int id, String title, String link, String status, Timestamp createDate) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.link = link;
         this.status = status;
         this.createDate = createDate;

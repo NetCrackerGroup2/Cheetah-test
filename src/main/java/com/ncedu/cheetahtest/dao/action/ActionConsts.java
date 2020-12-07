@@ -12,6 +12,10 @@ public class ActionConsts {
             "INNER JOIN compound c ON comp_act_prior.comp_id = c.id " +
             "WHERE c.id = ? ORDER BY comp_act_prior.priority " +
             "LIMIT ? OFFSET ?";
+    public static final String GET_ACTIONS_IN_COMPOUND_NOT_PAGINATED = "SELECT action.id, action.title, action.type, action.description " +
+            "FROM action INNER JOIN comp_act_prior ON action.id = comp_act_prior.action_id " +
+            "INNER JOIN compound c ON comp_act_prior.comp_id = c.id " +
+            "WHERE c.id = ? ORDER BY comp_act_prior.priority";
     public static final String GET_TOTAL_ACTIONS_IN_COMP = "SELECT COUNT(*)" +
             "FROM action INNER JOIN comp_act_prior ON action.id = comp_act_prior.action_id " +
             "INNER JOIN compound c ON comp_act_prior.comp_id = c.id " +

@@ -41,4 +41,9 @@ public class ActionController {
         return actionService.geActionsByType(type, size, page);
     }
 
+    @GetMapping("/{id}")
+    public Action getAllActionsByTitleLike(@PathVariable int id){
+        return actionService.getActionById(id);
+    }
+
 }

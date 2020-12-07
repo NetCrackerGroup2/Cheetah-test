@@ -9,11 +9,11 @@ public interface ProjectDao {
 
     void createProject(ProjectDto project);
 
-    List<Project> getAllProjects();
-
     void setArchievedStatus(int id);
 
     List<Project> getAllArchievedProjects();
 
     Project findByProjectId(int id);
+
+    void updateProjectById(int id, Project project);
 }

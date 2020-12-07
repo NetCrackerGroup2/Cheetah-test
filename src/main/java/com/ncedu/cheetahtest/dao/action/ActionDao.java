@@ -19,5 +19,5 @@ public interface ActionDao {
     List<Action> selectAllActionsByTitleLike(String title);
     List<Action> getActionsByType(String type, int limit, int offset);
 
-
+    List<Action> getActionsInCompoundNotPaginated(int idCompound);
 }

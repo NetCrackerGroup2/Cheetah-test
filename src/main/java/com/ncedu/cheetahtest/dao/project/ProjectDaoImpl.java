@@ -1,5 +1,6 @@
 package com.ncedu.cheetahtest.dao.project;
 
+import com.ncedu.cheetahtest.dao.genericdao.AbstractDaoImpl;
 import com.ncedu.cheetahtest.entity.project.Project;
 import com.ncedu.cheetahtest.entity.project.ProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class ProjectDaoImpl implements ProjectDao {
+public class ProjectDaoImpl extends AbstractDaoImpl<Project> implements ProjectDao {
     private final JdbcTemplate jdbcTemplate;
+    private static final String[] rows = {"id", "title", "link", "status", "create_date"};
+
 
     @Autowired
     public ProjectDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(new ProjectMapper(), jdbcTemplate, rows, "project");
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     @Override
     public void createProject(ProjectDto projectDto) {
@@ -27,15 +30,15 @@ public class ProjectDaoImpl implements ProjectDao {
 
         jdbcTemplate.update(
                 sqlQueryForProjectTable,
-                projectDto.getProject().getName(),
+                projectDto.getProject().getTitle(),
                 projectDto.getProject().getLink(),
                 "ACTIVE",
                 Timestamp.valueOf(LocalDateTime.now())
         );
 
         List<Project> project = jdbcTemplate.query(
-            ProjectSqlConsts.SELECT_PROJECT_BY_NAME_QUERY,
-            p -> p.setString(1, projectDto.getProject().getName()),
+            ProjectSqlConsts.SELECT_PROJECT_BY_TITLE_QUERY,
+            p -> p.setString(1, projectDto.getProject().getTitle()),
             new ProjectMapper()
         );
 
@@ -49,12 +52,6 @@ public class ProjectDaoImpl implements ProjectDao {
                     "WATCHER"
             );
         }
-    }
-
-    @Override
-    public List<Project> getAllProjects() {
-        String sqlQuery = ProjectSqlConsts.SELECT_ALL_PROJECTS_QUERY;
-        return jdbcTemplate.query(sqlQuery, new ProjectMapper());
     }
 
     @Override
@@ -81,5 +78,18 @@ public class ProjectDaoImpl implements ProjectDao {
         if (projects.size() == 1) return projects.get(0);
 
         return null;
+    }
+
+    @Override
+    public void updateProjectById(int id, Project project) {
+        String sqlQuery = ProjectSqlConsts.UPDATE_PROJECT_QUERY;
+
+        jdbcTemplate.update(
+                sqlQuery,
+                project.getTitle(),
+                project.getLink(),
+                id
+        );
+
     }
 }

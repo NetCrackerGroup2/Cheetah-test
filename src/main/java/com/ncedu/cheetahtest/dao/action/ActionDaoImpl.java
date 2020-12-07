@@ -142,6 +142,15 @@ public class ActionDaoImpl implements ActionDao {
     }
 
     @Override
+    public List<Action> getActionsInCompoundNotPaginated(int idCompound) {
+        return jdbcTemplate.query(
+                GET_ACTIONS_IN_COMPOUND_NOT_PAGINATED,
+                preparedStatement -> preparedStatement.setInt(1, idCompound),
+                new ActionRowMapper()
+        );
+    }
+
+    @Override
     public int getTotalActionsByType(String type) {
         List<Integer> counts = jdbcTemplate.query(
                 GET_TOTAL_ACTIONS_BY_TYPE,

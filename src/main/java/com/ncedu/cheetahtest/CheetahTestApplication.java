@@ -9,5 +9,4 @@ public class CheetahTestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CheetahTestApplication.class, args);
 	}
-
 }

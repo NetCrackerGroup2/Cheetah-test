@@ -12,4 +12,7 @@ public interface ActionService {
     Action editActionDescription(String description,int id);
     List<Action> getAllByTitleLike(String title);
     PaginationAction geActionsByType(String type,int size,int page);
+    Action getActionById(int id);
+
+    List<Action> getActionsInCompoundNotPaginated(int idCompound);
 }
