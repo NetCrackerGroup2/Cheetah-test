@@ -253,34 +253,46 @@ public class EmailServiceImpl implements EmailService{
                 Sheet sheet = workbook.createSheet("Specific");
 
 
-
+                sheet.setColumnWidth(0, 7000);
+                sheet.setColumnWidth(1, 7000);
 
 
                 String str = "";
                 int i = 0;
                 int iRow = 0;
                 Row header = sheet.createRow(iRow++);
-                CellStyle headerStyle = workbook.createCellStyle();
+                CellStyle headerStyleDarkGray = workbook.createCellStyle();
+                CellStyle headerStyleGray = workbook.createCellStyle();
+                CellStyle headerStyleTan = workbook.createCellStyle();
                 Cell headerCell = header.createCell(0);
+                headerCell.setCellValue("Cheetah-test");
+
+                XSSFFont font = ((XSSFWorkbook) workbook).createFont();
+                font.setFontName("Arial");
+                font.setFontHeightInPoints((short) 16);
+                font.setBold(true);
+
+                headerStyleDarkGray.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                headerStyleDarkGray.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                headerStyleDarkGray.setFont(font);
+                headerStyleGray.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+                headerStyleGray.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                headerStyleGray.setFont(font);
+                headerStyleTan.setFillForegroundColor(IndexedColors.TAN.getIndex());
+                headerStyleTan.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                headerStyleTan.setFont(font);
+                headerCell.setCellStyle(headerStyleTan);
                 if (specificReport.getSendProjectUse()){
 
                     for (Project project: projectList){
                         str += "<h2>Project" + project.getTitle() + "</h2>\n";
                         header = sheet.createRow(iRow++);
 
-                        headerStyle = workbook.createCellStyle();
 
-                        headerStyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
-                        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-
-                        XSSFFont font = ((XSSFWorkbook) workbook).createFont();
-                        font.setFontName("Arial");
-                        font.setFontHeightInPoints((short) 16);
-                        font.setBold(true);
-                        headerStyle.setFont(font);
                         headerCell = header.createCell(0);
                         headerCell.setCellValue(project.getTitle());
-                        headerCell.setCellStyle(headerStyle);
+
+                        headerCell.setCellStyle(headerStyleDarkGray);
                         int size = testCaseDao.getAmountActiveElementsByProjectId(project.getId());
                         testCaseList = testCaseDao.
                                 getActiveTestCasesPaginatedByProjectId(1, size, project.getId());
@@ -289,7 +301,8 @@ public class EmailServiceImpl implements EmailService{
                             header = sheet.createRow(iRow++);
                             headerCell = header.createCell(1);
                             headerCell.setCellValue(testCase.getTitle());
-                            headerCell.setCellStyle(headerStyle);
+
+                            headerCell.setCellStyle(headerStyleGray);
                             str += "<p>" + testCase.getTitle() + "</p>\n";
                             i++;
                         }
@@ -302,13 +315,13 @@ public class EmailServiceImpl implements EmailService{
                     header = sheet.createRow(iRow++);
                     headerCell = header.createCell(0);
                     headerCell.setCellValue("All  test cases");
-                    headerCell.setCellStyle(headerStyle);
+                    headerCell.setCellStyle(headerStyleDarkGray);
                     for (TestCase testCase: testCaseList) {
                         str += "<p>" + testCase.getTitle() + "</p>\n";
                         header = sheet.createRow(iRow++);
                         headerCell = header.createCell(1);
                         headerCell.setCellValue(testCase.getTitle());
-                        headerCell.setCellStyle(headerStyle);
+                        headerCell.setCellStyle(headerStyleGray);
                         i++;
                     }
                 }
@@ -318,7 +331,7 @@ public class EmailServiceImpl implements EmailService{
                         header = sheet.createRow(iRow++);
                         headerCell = header.createCell(0);
                         headerCell.setCellValue("Selected completed test cases");
-                        headerCell.setCellStyle(headerStyle);
+                        headerCell.setCellStyle(headerStyleDarkGray);
                         for(Project project: projectList) {
                             for (TestCase testCase : testCaseList) {
                                 if(testCase.getProjectId() == project.getId()) {
@@ -327,7 +340,7 @@ public class EmailServiceImpl implements EmailService{
                                     header = sheet.createRow(iRow++);
                                     headerCell = header.createCell(1);
                                     headerCell.setCellValue(testCase.getTitle());
-                                    headerCell.setCellStyle(headerStyle);
+                                    headerCell.setCellStyle(headerStyleGray);
                                     i++;
                                 }
                             }
@@ -359,7 +372,7 @@ public class EmailServiceImpl implements EmailService{
 
                 File excelFile = new File("src/main/resources/excel/mail.xls");
 
-                helper.addAttachment("one-test-case.xlsx", excelFile);
+                helper.addAttachment("special.xlsx", excelFile);
 
                 emailSender.send(message);
 
