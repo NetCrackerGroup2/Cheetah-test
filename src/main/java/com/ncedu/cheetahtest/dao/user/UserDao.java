@@ -1,5 +1,6 @@
 package com.ncedu.cheetahtest.dao.user;
 
+import com.ncedu.cheetahtest.entity.project.Project;
 import com.ncedu.cheetahtest.entity.user.ResetToken;
 import com.ncedu.cheetahtest.entity.user.User;
 import com.ncedu.cheetahtest.entity.user.UserDto;
@@ -38,4 +39,6 @@ public interface UserDao {
                                               String role);
 
     List<UserDto> findByEmail(String title);
+
+    List<Project> getProjectsByUserId(int userId);
 }

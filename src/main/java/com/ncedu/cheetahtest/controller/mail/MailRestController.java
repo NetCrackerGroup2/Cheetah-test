@@ -3,6 +3,7 @@ package com.ncedu.cheetahtest.controller.mail;
 import com.ncedu.cheetahtest.entity.mail.Email;
 import com.ncedu.cheetahtest.entity.mail.GenericResponse;
 import com.ncedu.cheetahtest.entity.mail.PasswordDTO;
+import com.ncedu.cheetahtest.entity.mail.SpecificReport;
 import com.ncedu.cheetahtest.entity.user.ResetToken;
 import com.ncedu.cheetahtest.entity.user.User;
 import com.ncedu.cheetahtest.service.mail.EmailService;
@@ -27,6 +28,8 @@ import java.util.UUID;
 public class MailRestController {
     public static final String SUBJECT = "Password reset";
     private static final String HTML_PATH = "src/main/resources/mail/email.html";
+    private static final String HTML_GENERATE_ONE_TEST_CASE = "src/main/resources/mail/generate-one-test-case.html";
+    private static final String HTML_SPECIFIC_REPORT = "src/main/resources/mail/specific-report.html";
 
     @Value("${frontend.ulr}/reset-password?token=")
     private String FRONT_URL;
@@ -62,6 +65,23 @@ public class MailRestController {
                                                        @RequestBody List<String> emails){
             emailService.sendTestCaseReportToAddresses(emails,idTestCase,idProject);
             return new ResponseEntity<>(new GenericResponse("Success"), HttpStatus.OK);
+    }
+
+    @PostMapping("/projects/{idProject}/test-cases/{idTestCase}/send-generate-report")
+    public ResponseEntity<GenericResponse> sendGenerateTestCaseMassage(@PathVariable int idTestCase,
+                                                                       @PathVariable int idProject,
+                                                                       @RequestBody List<String> emails){
+        emailService
+                .sendGenerateTestCaseReportToAddresses(emails, idTestCase,
+                        idProject,HTML_GENERATE_ONE_TEST_CASE);
+        return new ResponseEntity<>(new GenericResponse("Success"), HttpStatus.OK);
+    }
+
+    @PostMapping("/specific-report")
+    public ResponseEntity<GenericResponse> sendSpecificReport(@RequestBody SpecificReport specificReport){
+
+        emailService.sendSpecificReport(specificReport, HTML_SPECIFIC_REPORT);
+        return new ResponseEntity<>(new GenericResponse("Success"), HttpStatus.OK);
     }
 
     @PostMapping("/save-password")

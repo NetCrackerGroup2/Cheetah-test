@@ -1,6 +1,8 @@
 package com.ncedu.cheetahtest.dao.user;
 
 import com.ncedu.cheetahtest.dao.genericdao.AbstractDaoImpl;
+import com.ncedu.cheetahtest.dao.project.ProjectMapper;
+import com.ncedu.cheetahtest.entity.project.Project;
 import com.ncedu.cheetahtest.entity.user.ResetToken;
 import com.ncedu.cheetahtest.entity.user.User;
 import com.ncedu.cheetahtest.entity.user.UserDto;
@@ -208,6 +210,15 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
                 FIND_BY_EMAIL,
                 preparedStatement -> preparedStatement.setString(1,title),
                 new UserDtoRowMapper()
+        );
+    }
+
+    @Override
+    public List<Project> getProjectsByUserId(int userId) {
+        return jdbcTemplate.query(
+                FIND_PROJECT_BY_USER_ID,
+                preparedStatement -> preparedStatement.setInt(1, userId),
+                new ProjectMapper()
         );
     }
 }
