@@ -129,13 +129,23 @@ public class EmailServiceImpl implements EmailService{
 
                 helper.setTo(email);
 
+                boolean isRepeatable = testCaseDao.getTestCaseRepeatable(idTestCase);
+
+
+
                 List<String> strs = new ArrayList<String>();
+                strs.add((isRepeatable ? "Repeatable " : "One-time ") + "test case");
                 strs.add(userDao.findUserByEmail(email).getName());
                 strs.add(testCaseDao.findTestCaseByProjectIdAndTestCaseId(idProject, idProject).getTitle());
                 strs.add(projectDao.findByProjectId(idProject).getTitle());
 
-                message.setSubject("One-time test case -> [" + strs.get(1) + "] " +
-                        " Project -> [" + strs.get(2) + "]");
+                int lineCount = 4;
+
+                String titleEmail = isRepeatable ? "Recurrent test case  " :
+                        "One-time test case -> [" + strs.get(1) + "] " +
+                                " Project -> [" + strs.get(2) + "]  ";
+
+                message.setSubject(titleEmail);
 
                 List<ActScenario> actScenarioList = actScenarioDao.getAllByTestCaseId(idTestCase);
 
@@ -178,9 +188,11 @@ public class EmailServiceImpl implements EmailService{
 
                 List<Action> actionList = new ArrayList<>();
                 String actions = new String();
+                int rowCountExcel = 1;
                 for (ActScenario actScenario : actScenarioList) {
+                    lineCount++;
                     actionList.add(actionDao.getActionById(actScenario.getActionId()));
-                    header = sheet.createRow(actionList.size());
+                    header = sheet.createRow(rowCountExcel++);
                     headerCell = header.createCell(0);
                     headerCell.setCellValue(actionList.get(actionList.size() - 1).getTitle());
                     headerCell.setCellStyle(headerStyle);
@@ -196,7 +208,23 @@ public class EmailServiceImpl implements EmailService{
                             + "&emsp;&emsp;&emsp;&emsp;&emsp;" + actionList.get(actionList.size() - 1).getType()
                             + "&emsp;&emsp;&emsp;&emsp;&emsp;" + actionList.get(actionList.size() - 1).getDescription() + "<br>\n";
                 }
+
+                if(isRepeatable) {
+                    lineCount++;
+                    header = sheet.createRow(rowCountExcel);
+                    headerCell = header.createCell(0);
+                    String executionDate = testCaseDao.getExecutionDateById(idTestCase);
+                    headerCell.setCellValue(executionDate);
+                    headerCell.setCellStyle(headerStyle);
+                    actions += "<p>Execution date:</p>";
+                    actions += "> " + executionDate + "<br>\n";
+                }
+
                 strs.add(actions);
+
+                Collections.reverse(strs);
+                strs.add("height: " + (new Integer(lineCount * 100).toString()) + "px;");
+                Collections.reverse(strs);
 
 
                 String htmlString = htmlMail.getHtmlWithStrings(strs, pathHTML).orElseThrow(FileNotFoundException::new);
@@ -252,6 +280,8 @@ public class EmailServiceImpl implements EmailService{
 
                 Sheet sheet = workbook.createSheet("Specific");
 
+                message.setSubject("Specific report");
+
 
                 sheet.setColumnWidth(0, 7000);
                 sheet.setColumnWidth(1, 7000);
@@ -303,7 +333,7 @@ public class EmailServiceImpl implements EmailService{
                             headerCell.setCellValue(testCase.getTitle());
 
                             headerCell.setCellStyle(headerStyleGray);
-                            str += "<p>" + testCase.getTitle() + "</p>\n";
+                            str += testCase.getTitle() + "<br>\n";
                             i++;
                         }
                     }
@@ -317,7 +347,7 @@ public class EmailServiceImpl implements EmailService{
                     headerCell.setCellValue("All  test cases");
                     headerCell.setCellStyle(headerStyleDarkGray);
                     for (TestCase testCase: testCaseList) {
-                        str += "<p>" + testCase.getTitle() + "</p>\n";
+                        str += testCase.getTitle() + "<br>\n";
                         header = sheet.createRow(iRow++);
                         headerCell = header.createCell(1);
                         headerCell.setCellValue(testCase.getTitle());
@@ -335,8 +365,8 @@ public class EmailServiceImpl implements EmailService{
                         for(Project project: projectList) {
                             for (TestCase testCase : testCaseList) {
                                 if(testCase.getProjectId() == project.getId()) {
-                                    str += "<p>" + testCase.getTitle() + "</p>\n";
-                                    str += "<p>" + testCase.getTitle() + "</p>\n";
+                                    str +=  testCase.getTitle() + "<br>\n";
+                                    str +=  testCase.getTitle() + "<br>\n";
                                     header = sheet.createRow(iRow++);
                                     headerCell = header.createCell(1);
                                     headerCell.setCellValue(testCase.getTitle());

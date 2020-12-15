@@ -67,4 +67,14 @@ public class TestCaseConsts {
             "SELECT id, title, project_id, status, result " +
             "FROM test_case " +
             "WHERE project_id = ? AND id = ?";
+
+    public static final String CHECK_REPEATEBLE_TEST_CASE =
+            "SELECT repeatable " +
+            "   FROM test_case " +
+            "   WHERE id=?; ";
+
+    public static final String GET__EXECUTION_DATE_BY_ID =
+            "SELECT execution_cron_date " +
+            "   FROM test_case " +
+            "   WHERE id=?; ";
 }
